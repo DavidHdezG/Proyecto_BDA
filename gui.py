@@ -5,24 +5,6 @@ from PyQt5.QtWidgets import QTableWidgetItem, QAbstractItemView, QDialog, QLineE
 
 import Connection
 
-
-def show_critical_messagebox(error):
-    msg = QMessageBox()
-    msg.setIcon(QMessageBox.Critical)
-
-    # setting message for Message Box
-    msg.setText(error)
-
-    # setting Message box window title
-    msg.setWindowTitle("Critical MessageBox")
-
-    # declaring buttons on Message Box
-    msg.setStandardButtons(QMessageBox.Ok)
-
-    # start the app
-    retval = msg.exec_()
-
-
 class Ui_Proyecto(object):
 
     def setupUi(self, Proyecto):
