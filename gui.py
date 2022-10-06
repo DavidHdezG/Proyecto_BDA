@@ -12,7 +12,7 @@ class Ui_Proyecto(object):
         self.cursor = Connection.cursor
         Proyecto.setObjectName("Proyecto")
         Proyecto.resize(640, 480)
-        Proyecto.setFixedSize(640,480)
+        Proyecto.setFixedSize(640, 480)
         self.centralwidget = QtWidgets.QWidget(Proyecto)
         self.centralwidget.setObjectName("centralwidget")
         self.table = QtWidgets.QTableWidget(self.centralwidget)
@@ -85,8 +85,7 @@ class Ui_Proyecto(object):
         self.addEmp.setText(_translate("Proyecto", "Añadir empleado"))
         self.delEmp.setText(_translate("Proyecto", "Borrar empleado"))
         self.updateEmp.setText(_translate("Proyecto", "Actualizar empleado"))
-        self.noEmpDepto.setText(_translate("Proyecto", "No. de empleados \n"
-                                                       " en departamento"))
+        self.noEmpDepto.setText(_translate("Proyecto", "No. de empleados \n"" en departamento"))
         self.comboBox.setItemText(0, _translate("Proyecto", "Departamentos"))
         self.comboBox.setItemText(1, _translate("Proyecto", "Empleados"))
 
@@ -285,6 +284,3 @@ class EmpInputDialog(QDialog):
     def getInputs(self):
         return self.empno.text(), self.ename.text(), self.job.text(), self.mgr.text(), self.hireDate.text(), self.sal.text(), self.comm.text(), self.deptno.text()
 
-
-class CustomException(Exception):
-    pass
