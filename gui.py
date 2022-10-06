@@ -275,9 +275,7 @@ class EmpInputDialog(QDialog):
         layout.addRow("Salario", self.sal)
         layout.addRow("Comisión", self.comm)
         layout.addRow("Número de departamento", self.deptno)
-
         layout.addWidget(buttonBox)
-
         buttonBox.accepted.connect(self.accept)
         buttonBox.rejected.connect(self.reject)
 
