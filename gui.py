@@ -5,13 +5,14 @@ from PyQt5.QtWidgets import QTableWidgetItem, QAbstractItemView, QDialog, QLineE
 
 import Connection
 
+
 class Ui_Proyecto(object):
 
     def setupUi(self, Proyecto):
-
         self.cursor = Connection.cursor
         Proyecto.setObjectName("Proyecto")
         Proyecto.resize(640, 480)
+        Proyecto.setFixedSize(640,480)
         self.centralwidget = QtWidgets.QWidget(Proyecto)
         self.centralwidget.setObjectName("centralwidget")
         self.table = QtWidgets.QTableWidget(self.centralwidget)
@@ -23,7 +24,7 @@ class Ui_Proyecto(object):
         self.addDepto.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.addDepto.setObjectName("addDepto")
         self.updateDepto = QtWidgets.QPushButton(self.centralwidget)
-        self.updateDepto.setGeometry(QtCore.QRect(490, 150, 131, 21))
+        self.updateDepto.setGeometry(QtCore.QRect(482, 150, 147, 21))
         self.updateDepto.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.updateDepto.setObjectName("updateDepto")
         self.delDepto = QtWidgets.QPushButton(self.centralwidget)
@@ -126,7 +127,7 @@ class Ui_Proyecto(object):
 
     def noEmpDeptoButton(self):
         try:
-            dialog = DelInputDialog(None, 'departamento',"Número de empleados")
+            dialog = DelInputDialog(None, 'departamento', "Número de empleados")
 
             if dialog.exec_():
                 inputs = dialog.getInputs()
@@ -137,7 +138,7 @@ class Ui_Proyecto(object):
 
     def addDeptButton(self):
         try:
-            dialog = DeptInputDialog(None,"Añadir Departamento")
+            dialog = DeptInputDialog(None, "Añadir Departamento")
 
             if dialog.exec_():
                 inputs = dialog.getInputs()
@@ -148,7 +149,7 @@ class Ui_Proyecto(object):
 
     def updateDeptoButton(self):
         try:
-            dialog = DeptInputDialog(None,"Actualizar Departamento")
+            dialog = DeptInputDialog(None, "Actualizar Departamento")
 
             if dialog.exec_():
                 inputs = dialog.getInputs()
@@ -159,7 +160,7 @@ class Ui_Proyecto(object):
 
     def removeDeptButton(self):
         try:
-            dialog = DelInputDialog(None, 'departamento',"Borrar departamento")
+            dialog = DelInputDialog(None, 'departamento', "Borrar departamento")
             if dialog.exec_():
                 inputs = dialog.getInputs()
                 self.cursor.callproc('delete_depto', [inputs])
@@ -169,7 +170,7 @@ class Ui_Proyecto(object):
 
     def addEmpButton(self):
         try:
-            dialog = EmpInputDialog(None,"Añadir Empleado")
+            dialog = EmpInputDialog(None, "Añadir Empleado")
 
             if dialog.exec_():
                 inputs = dialog.getInputs()
@@ -183,7 +184,7 @@ class Ui_Proyecto(object):
 
     def deleteEmpButton(self):
         try:
-            dialog = DelInputDialog(None, 'empleado',"Borrar Empleado")
+            dialog = DelInputDialog(None, 'empleado', "Borrar Empleado")
             if dialog.exec_():
                 inputs = dialog.getInputs()
                 self.cursor.callproc('delete_emp', [inputs])
@@ -194,7 +195,7 @@ class Ui_Proyecto(object):
 
     def updateEmpButton(self):
         try:
-            dialog = EmpInputDialog(None,"Actualizar Empleado")
+            dialog = EmpInputDialog(None, "Actualizar Empleado")
 
             if dialog.exec_():
                 inputs = dialog.getInputs()
@@ -208,7 +209,7 @@ class Ui_Proyecto(object):
 
 
 class DelInputDialog(QDialog):
-    def __init__(self, parent=None, table='',title=""):
+    def __init__(self, parent=None, table='', title=""):
         super().__init__(parent)
         close = False
         self.idAux = QLineEdit(self)
@@ -230,7 +231,7 @@ class DelInputDialog(QDialog):
 
 
 class DeptInputDialog(QDialog):
-    def __init__(self, parent=None,title=""):
+    def __init__(self, parent=None, title=""):
         super().__init__(parent)
 
         self.deptno = QLineEdit(self)
@@ -287,6 +288,3 @@ class EmpInputDialog(QDialog):
 
 class CustomException(Exception):
     pass
-
-
-
