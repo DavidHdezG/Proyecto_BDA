@@ -52,19 +52,19 @@ BEGIN
     COMMIT;
     EXCEPTION
         WHEN muy_grande THEN
-            RAISE_APPLICATION_ERROR(-2000, 'ERROR: El valor de una columna es demasiado grande');
+            RAISE_APPLICATION_ERROR(-20000, 'ERROR: El valor de una columna es demasiado grande');
         WHEN no_numero THEN
-            RAISE_APPLICATION_ERROR(-2001, 'ERROR: Tipo de dato numerico no valido');
+            RAISE_APPLICATION_ERROR(-20001, 'ERROR: Tipo de dato numerico no valido');
         WHEN no_permitido THEN
-            RAISE_APPLICATION_ERROR(-2002, 'ERROR: Columna no permitida');
+            RAISE_APPLICATION_ERROR(-20002, 'ERROR: Columna no permitida');
         WHEN dato_inconsistente THEN
-            RAISE_APPLICATION_ERROR(-2003, 'ERROR: Tipos de dato inconsistente');
+            RAISE_APPLICATION_ERROR(-20003, 'ERROR: Tipos de dato inconsistente');
         WHEN restriccion_unica THEN
-            RAISE_APPLICATION_ERROR(-2004, 'ERROR: Restriccion unica violada');
+            RAISE_APPLICATION_ERROR(-20004, 'ERROR: Restriccion unica violada');
         WHEN not_null_constraint THEN
-            RAISE_APPLICATION_ERROR(-2016, 'ERROR: Una columna no admite valores nulos');
+            RAISE_APPLICATION_ERROR(-20016, 'ERROR: Una columna no admite valores nulos');
         WHEN no_existe_dept THEN
-            RAISE_APPLICATION_ERROR(-2017, 'ERROR: El departamento no existe');
+            RAISE_APPLICATION_ERROR(-20017, 'ERROR: El departamento no existe');
 END;
 --------------------------------------------------------------------------------------------------
 create or replace PROCEDURE Add_depto(
@@ -91,17 +91,17 @@ BEGIN
     COMMIT;
     EXCEPTION
         WHEN muy_grande THEN
-            RAISE_APPLICATION_ERROR(-2000, 'ERROR: El valor de una columna es demasiado grande');
+            RAISE_APPLICATION_ERROR(-20000, 'ERROR: El valor de una columna es demasiado grande');
         WHEN no_numero THEN
-            RAISE_APPLICATION_ERROR(-2001, 'ERROR: Tipo de dato numerico no valido');
+            RAISE_APPLICATION_ERROR(-20001, 'ERROR: Tipo de dato numerico no valido');
         WHEN no_permitido THEN
-            RAISE_APPLICATION_ERROR(-2002, 'ERROR: Columna no permitida');
+            RAISE_APPLICATION_ERROR(-20002, 'ERROR: Columna no permitida');
         WHEN dato_inconsistente THEN
-            RAISE_APPLICATION_ERROR(-2003, 'ERROR: Tipos de dato inconsistente');
+            RAISE_APPLICATION_ERROR(-20003, 'ERROR: Tipos de dato inconsistente');
         WHEN restriccion_unica THEN
-            RAISE_APPLICATION_ERROR(-2004, 'ERROR: Restriccion unica violada');
+            RAISE_APPLICATION_ERROR(-20004, 'ERROR: Restriccion unica violada');
         WHEN not_null_constraint THEN
-            RAISE_APPLICATION_ERROR(-2016, 'ERROR: Una columna no admite valores nulos');
+            RAISE_APPLICATION_ERROR(-20016, 'ERROR: Una columna no admite valores nulos');
 
 END;
 --------------------------------------------------------------------------------------------------
@@ -123,9 +123,9 @@ BEGIN
     COMMIT;
 EXCEPTION
     WHEN no_existe THEN
-        RAISE_APPLICATION_ERROR(-2001, 'ERROR: No existe el departamento');
+        RAISE_APPLICATION_ERROR(-20001, 'ERROR: No existe el departamento');
     WHEN emp_en_dept THEN
-        RAISE_APPLICATION_ERROR(-2002, 'ERROR: El departamento tiene empleados');
+        RAISE_APPLICATION_ERROR(-20002, 'ERROR: El departamento tiene empleados');
 END;
 --------------------------------------------------------------------------------------------------
 create or replace PROCEDURE delete_emp(pempno NUMBER)
@@ -143,7 +143,7 @@ BEGIN
     COMMIT;
     EXCEPTION
         WHEN no_existe THEN
-            RAISE_APPLICATION_ERROR(-2001, 'ERROR: No existe el empleado');
+            RAISE_APPLICATION_ERROR(-20001, 'ERROR: No existe el empleado');
 END;
 --------------------------------------------------------------------------------------------------
 ----------------UPDATE PROCEDURES----------------
@@ -157,6 +157,8 @@ create or replace PROCEDURE Update_emp(
       pcomm NUMBER,
       pdeptno NUMBER)
 IS
+    actualizar_null EXCEPTION;
+    PRAGMA EXCEPTION_INIT(actualizar_null, -01407);
     muy_grande EXCEPTION;
     PRAGMA EXCEPTION_INIT(muy_grande, -12899);
     no_numero EXCEPTION;
@@ -180,21 +182,23 @@ BEGIN
     COMMIT;
     EXCEPTION
         WHEN no_data_found THEN
-            RAISE_APPLICATION_ERROR(-2011, 'ERROR: El empleado no existe');
+            RAISE_APPLICATION_ERROR(-20011, 'ERROR: El empleado no existe');
         WHEN muy_grande THEN
-            RAISE_APPLICATION_ERROR(-2012, 'ERROR: El valor de una columna es demasiado grande');
+            RAISE_APPLICATION_ERROR(-20012, 'ERROR: El valor de una columna es demasiado grande');
         WHEN no_numero THEN
-            RAISE_APPLICATION_ERROR(-2013, 'ERROR: Tipo de dato numerico no valido');
+            RAISE_APPLICATION_ERROR(-20013, 'ERROR: Tipo de dato numerico no valido');
         WHEN no_permitido THEN
-            RAISE_APPLICATION_ERROR(-2014, 'ERROR: Columna no permitida');
+            RAISE_APPLICATION_ERROR(-20014, 'ERROR: Columna no permitida');
         WHEN dato_inconsistente THEN
-            RAISE_APPLICATION_ERROR(-2015, 'ERROR: Tipos de dato inconsistente');
+            RAISE_APPLICATION_ERROR(-20015, 'ERROR: Tipos de dato inconsistente');
         WHEN restriccion_unica THEN
-            RAISE_APPLICATION_ERROR(-2016, 'ERROR: Restriccion unica violada');
+            RAISE_APPLICATION_ERROR(-20016, 'ERROR: Restriccion unica violada');
         WHEN not_null_constraint THEN
-            RAISE_APPLICATION_ERROR(-2016, 'ERROR: Una columna no admite valores nulos');
+            RAISE_APPLICATION_ERROR(-20016, 'ERROR: Una columna no admite valores nulos');
         WHEN no_existe_dept THEN
-            RAISE_APPLICATION_ERROR(-2017, 'ERROR: El departamento no existe');
+            RAISE_APPLICATION_ERROR(-20017, 'ERROR: El departamento no existe');
+        WHEN actualizar_null THEN
+            RAISE_APPLICATION_ERROR(-20018, 'ERROR: No se pueden actualizar valores a NULL');
 
 END;
 --------------------------------------------------------------------------------------------------
@@ -215,7 +219,8 @@ IS
     PRAGMA EXCEPTION_INIT(restriccion_unica, -00001);
     not_null_constraint  EXCEPTION;
     PRAGMA EXCEPTION_INIT(not_null_constraint,-01400);
-
+    actualizar_null EXCEPTION;
+    PRAGMA EXCEPTION_INIT(actualizar_null, -01407);
 BEGIN
     UPDATE DEPT
     SET dname = pdname, loc = ploc
@@ -223,21 +228,44 @@ BEGIN
     COMMIT;
     EXCEPTION
         WHEN no_data_found THEN
-            RAISE_APPLICATION_ERROR(-2011, 'ERROR: El departamento no existe');
+            RAISE_APPLICATION_ERROR(-20011, 'ERROR: El departamento no existe');
         WHEN muy_grande THEN
-            RAISE_APPLICATION_ERROR(-2012, 'ERROR: El valor de una columna es demasiado grande');
+            RAISE_APPLICATION_ERROR(-20012, 'ERROR: El valor de una columna es demasiado grande');
         WHEN no_numero THEN
-            RAISE_APPLICATION_ERROR(-2013, 'ERROR: Tipo de dato numerico no valido');
+            RAISE_APPLICATION_ERROR(-20013, 'ERROR: Tipo de dato numerico no valido');
         WHEN no_permitido THEN
-            RAISE_APPLICATION_ERROR(-2014, 'ERROR: Columna no permitida');
+            RAISE_APPLICATION_ERROR(-20014, 'ERROR: Columna no permitida');
         WHEN dato_inconsistente THEN
-            RAISE_APPLICATION_ERROR(-2015, 'ERROR: Tipos de dato inconsistente');
+            RAISE_APPLICATION_ERROR(-20015, 'ERROR: Tipos de dato inconsistente');
         WHEN restriccion_unica THEN
-            RAISE_APPLICATION_ERROR(-2016, 'ERROR: Restriccion unica violada');
+            RAISE_APPLICATION_ERROR(-20016, 'ERROR: Restriccion unica violada');
         WHEN not_null_constraint THEN
-            RAISE_APPLICATION_ERROR(-2016, 'ERROR: Una columna no admite valores nulos');
+            RAISE_APPLICATION_ERROR(-20016, 'ERROR: Una columna no admite valores nulos');
+        WHEN actualizar_null THEN
+            RAISE_APPLICATION_ERROR(-20017, 'ERROR: No se pueden actualizar valores a NULL');
 
 END;
 
 
+----------------------------------------------------------------------------
+---------------------------------------------------------
+
+create or replace NONEDITIONABLE FUNCTION no_emp_deptno
+(pdepno dept.deptno%TYPE) RETURN NUMBER
+IS
+    cant_employees NUMBER;
+BEGIN
+    SELECT COUNT(empno)
+    INTO cant_employees
+    FROM emp
+    WHERE deptno = pdepno;
+    IF cant_employees = 0 THEN
+        RAISE no_data_found;
+    END IF;
+    RETURN cant_employees;
+
+    EXCEPTION
+        WHEN no_data_found THEN
+            RETURN -1;
+END no_emp_deptno;
 

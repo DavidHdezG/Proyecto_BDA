@@ -2,7 +2,6 @@ import cx_Oracle
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QTableWidgetItem, QAbstractItemView, QDialog, QLineEdit, QDialogButtonBox, QFormLayout, \
     QMessageBox
-
 import Connection
 
 
@@ -131,7 +130,11 @@ class Ui_Proyecto(object):
             if dialog.exec_():
                 inputs = dialog.getInputs()
                 res = self.cursor.callfunc('no_emp_deptno', int, [inputs])
-                QMessageBox.information(None, "Departamento " + inputs, "Número de Empleados: " + str(res))
+                if res == -1:
+                    QMessageBox.information(None, "Departamento " + inputs, "El departamento no tiene empleados asignados")
+                else:
+                    QMessageBox.information(None, "Departamento " + inputs, "Número de Empleados: " + str(res))
+
         except cx_Oracle.DatabaseError as e:
             QMessageBox.critical(None, "Error", str(e))
 
@@ -281,4 +284,3 @@ class EmpInputDialog(QDialog):
 
     def getInputs(self):
         return self.empno.text(), self.ename.text(), self.job.text(), self.mgr.text(), self.hireDate.text(), self.sal.text(), self.comm.text(), self.deptno.text()
-
