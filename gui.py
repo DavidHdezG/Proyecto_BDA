@@ -262,9 +262,11 @@ class EmpInputDialog(QDialog):
         self.ename = QLineEdit(self)
         self.job = QLineEdit(self)
         self.mgr = QLineEdit(self)
+        self.mgr.setPlaceholderText("Opcional")
         self.hireDate = QLineEdit(self)
         self.sal = QLineEdit(self)
         self.comm = QLineEdit(self)
+        self.comm.setPlaceholderText("Opcional")
         self.deptno = QLineEdit(self)
         buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, self);
 
