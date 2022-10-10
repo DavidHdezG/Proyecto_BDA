@@ -19,6 +19,8 @@ ALTER TABLE emp
 MODIFY (sal NOT NULL);
 ALTER TABLE emp
 ADD CONSTRAINT fk_emp_deptno FOREIGN KEY (deptno) REFERENCES DEPT(deptno);
+ALTER TABLE emp
+ADD CONSTRAINT fk_emp_mgr FOREIGN KEY (mgr) REFERENCES EMP(empno);
 ----------------INSERT/ADD PROCEDURES----------------
 --------------------------------------------------------------------------------------------------
 create or replace PROCEDURE Add_emp(
@@ -131,6 +133,8 @@ END;
 create or replace PROCEDURE delete_emp(pempno NUMBER)
 IS
      no_existe EXCEPTION;
+    emp_es_mgr EXCEPTION;
+    PRAGMA EXCEPTION_INIT(emp_es_mgr, -02292);
 BEGIN
     DELETE FROM emp
     WHERE empno = (SELECT empno
@@ -144,6 +148,8 @@ BEGIN
     EXCEPTION
         WHEN no_existe THEN
             RAISE_APPLICATION_ERROR(-20001, 'ERROR: No existe el empleado');
+        WHEN emp_es_mgr THEN
+            RAISE_APPLICATION_ERROR(-20002, 'ERROR: El empleado es manager de otro(s)');
 END;
 --------------------------------------------------------------------------------------------------
 ----------------UPDATE PROCEDURES----------------
@@ -171,8 +177,8 @@ IS
     PRAGMA EXCEPTION_INIT(restriccion_unica, -00001);
     not_null_constraint  EXCEPTION;
     PRAGMA EXCEPTION_INIT(not_null_constraint,-01400);
-    no_existe_dept  EXCEPTION;
-    PRAGMA EXCEPTION_INIT(no_existe_dept,-02291);
+    fk  EXCEPTION;
+    PRAGMA EXCEPTION_INIT(fk,-02291);
 
 BEGIN
     UPDATE emp
@@ -195,8 +201,12 @@ BEGIN
             RAISE_APPLICATION_ERROR(-20016, 'ERROR: Restriccion unica violada');
         WHEN not_null_constraint THEN
             RAISE_APPLICATION_ERROR(-20016, 'ERROR: Una columna no admite valores nulos');
-        WHEN no_existe_dept THEN
-            RAISE_APPLICATION_ERROR(-20017, 'ERROR: El departamento no existe');
+        WHEN fk THEN
+            IF INSTR(sqlerrm, 'FK_EMP_MGR') > 0 THEN
+                RAISE_APPLICATION_ERROR(-20017, 'ERROR: El manager no existe');
+            ELSIF INSTR(sqlerrm, 'FK_EMP_DEPTNO') > 0 THEN
+                RAISE_APPLICATION_ERROR(-20017, 'ERROR: El departamento no existe');
+            END IF;
         WHEN actualizar_null THEN
             RAISE_APPLICATION_ERROR(-20018, 'ERROR: No se pueden actualizar valores a NULL');
 
@@ -268,4 +278,3 @@ BEGIN
         WHEN no_data_found THEN
             RETURN -1;
 END no_emp_deptno;
-
